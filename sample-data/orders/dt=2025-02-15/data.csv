@@ -1,0 +1,11 @@
+order_id,customer_id,product_id,quantity,total_amount,order_status
+11,15,7,1,3500,completed
+12,9,11,2,2200,completed
+13,1,12,1,5400,completed
+14,14,9,1,1200,completed
+15,3,16,2,4800,completed
+16,11,13,1,2200,completed
+17,2,1,1,4980,completed
+18,20,18,3,2040,completed
+19,16,10,1,2980,completed
+20,13,3,2,6400,shipped
