@@ -15,8 +15,14 @@ athena = boto3.client("athena")
 def list_tables() -> str:
     """指定データベースのテーブル一覧を取得する。最初に必ずこのツールを呼んで利用可能なテーブルを確認すること。"""
     res = glue.get_tables(DatabaseName=DATABASE_NAME)
-    tables = [t["Name"] for t in res["TableList"]]
-    return f"Tables in {DATABASE_NAME}: {', '.join(tables)}"
+    table_lines = []
+    for t in res["TableList"]:
+        desc = t.get("Description", "")
+        if desc:
+            table_lines.append(f"  {t['Name']} -- {desc}")
+        else:
+            table_lines.append(f"  {t['Name']}")
+    return f"Tables in {DATABASE_NAME}:\n" + "\n".join(table_lines)
 
 
 @tool
@@ -29,13 +35,24 @@ def get_table_schema(table_name: str) -> str:
     res = glue.get_table(DatabaseName=DATABASE_NAME, Name=table_name)
     table = res["Table"]
 
+    table_desc = table.get("Description", "")
     cols = table["StorageDescriptor"]["Columns"]
     part_keys = table.get("PartitionKeys", [])
 
-    col_defs = "\n".join([f"  {c['Name']} {c['Type']}" for c in cols])
-    part_defs = "\n".join([f"  {c['Name']} {c['Type']} (partition)" for c in part_keys])
+    col_defs = "\n".join([
+        f"  {c['Name']} {c['Type']}" + (f" -- {c['Comment']}" if c.get('Comment') else "")
+        for c in cols
+    ])
+    part_defs = "\n".join([
+        f"  {c['Name']} {c['Type']} (partition)" + (f" -- {c['Comment']}" if c.get('Comment') else "")
+        for c in part_keys
+    ])
 
-    return f"""Table: {DATABASE_NAME}.{table_name}
+    header = f"Table: {DATABASE_NAME}.{table_name}"
+    if table_desc:
+        header += f"\nDescription: {table_desc}"
+
+    return f"""{header}
 Columns:
 {col_defs}
 Partition Keys:

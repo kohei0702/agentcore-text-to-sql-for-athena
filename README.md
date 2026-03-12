@@ -24,7 +24,7 @@ Amazon Bedrock AgentCore と Strands Agents を使用して、自然言語から
 | **AgentCore Runtime** | Strands Agent を実行するランタイム |
 | **S3 (データバケット)** | サンプル CSV データを格納 |
 | **S3 (結果バケット)** | Athena クエリ結果を格納 |
-| **Glue Database / Crawler** | CSV からテーブルスキーマを自動検出 |
+| **Glue Database / Table** | テーブルスキーマとメタデータ（カラム説明含む）を管理 |
 | **Athena WorkGroup** | SQL クエリの実行環境 |
 
 ## サンプルデータ
@@ -44,7 +44,7 @@ Amazon Bedrock AgentCore と Strands Agents を使用して、自然言語から
 エージェントは以下の 3 つのツールを使い、段階的にクエリを生成・実行する。
 
 1. **`list_tables`** – データベース内のテーブル一覧を取得
-2. **`get_table_schema`** – 対象テーブルのスキーマ（カラム名・型・パーティションキー）を取得
+2. **`get_table_schema`** – 対象テーブルのスキーマ（カラム名・型・説明・パーティションキー）を取得
 3. **`execute_athena_query`** – 生成した SQL を Athena で実行し、結果を返却
 
 ## 前提条件
@@ -68,18 +68,14 @@ npx cdk bootstrap
 npx cdk deploy
 ```
 
-### Glue Crawler の実行
+### パーティションの登録
 
-デプロイ後、Glue Crawler を実行してテーブルスキーマを作成する。
-
-```bash
-aws glue start-crawler --name csv-crawler
-```
-
-Crawler の完了は以下で確認できる。
+デプロイ後、`orders` テーブルのパーティションを Athena に認識させる。
 
 ```bash
-aws glue get-crawler --name csv-crawler --query 'Crawler.State'
+aws athena start-query-execution \
+  --query-string "MSCK REPAIR TABLE csv_database.orders" \
+  --work-group csv-query-workgroup
 ```
 
 ## 使い方
