@@ -1,4 +1,4 @@
-# AgentCore Text-to-SQL
+# AgentCore Text-to-SQL for Athena
 
 Amazon Bedrock AgentCore と Strands Agents を使用して、自然言語から Amazon Athena に対する SQL クエリを生成・実行するエージェントを構築するサンプルプロジェクト
 
@@ -49,10 +49,10 @@ Amazon Bedrock AgentCore と Strands Agents を使用して、自然言語から
 
 ## 前提条件
 
-- [Node.js](https://nodejs.org/) (v18 以上)
-- [AWS CDK CLI](https://docs.aws.amazon.com/cdk/v2/guide/cli.html) (`npm install -g aws-cdk`)
-- [Docker](https://www.docker.com/)
-- AWS アカウントおよび認証情報の設定済み環境
+- AWS CLI (AWS アカウントおよび認証情報の設定済み環境)
+- Node.js (v22 以上)
+- AWS CDK (`npm install -g aws-cdk`)
+- Docker
 - Amazon Bedrock で `jp.anthropic.claude-sonnet-4-6` モデルへのアクセスが有効であること
 
 ## デプロイ
