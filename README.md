@@ -7,7 +7,7 @@ Amazon Bedrock AgentCore と Strands Agents を使用して、自然言語から
 ```
 ユーザー ──> AgentCore Runtime (Strands Agent)
                  │
-                 ├── Bedrock (Claude Sonnet 4) ── LLM推論
+                 ├── Bedrock ── LLM推論
                  │
                  ├── Glue Data Catalog ── テーブル一覧 / スキーマ取得
                  │
